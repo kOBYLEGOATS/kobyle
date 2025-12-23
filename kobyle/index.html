@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Kobyle</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; scroll-behavior: smooth; font-family: Arial,sans-serif; background:black; color:white; overflow-x:hidden; position:relative; }
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px; 
+  width: 250px;
+  height: 100%;
+  background-color: rgba(20,20,30,0.95);
+  border-left: 2px solid white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  font-size: 18px;
+  transition: right 0.5s;
+  z-index: 999;
+}
+.sidebar h2 { font-size: 20px; border-bottom:1px solid white; padding-bottom:5px; margin-bottom:10px; }
+.sidebar p { line-height:1.6; }
+.sidebar.active { right: 0; }
+
+/* Przycisk do sidebar */
+#toggleSidebar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.1);
+  color:white;
+  border:2px solid white;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:1000;
+  transition:0.3s;
+}
+#toggleSidebar:hover { background: rgba(255,255,255,0.3); }
+
+/* Paski boczne */
+.side-bar-left, .side-bar-right {
+  position: fixed;
+  top: 0;
+  width:5px;
+  height:100%;
+  background: linear-gradient(0deg, transparent, #00f, transparent);
+  animation: slideBar 3s infinite;
+  z-index: 1;
+}
+.side-bar-left { left:0; }
+.side-bar-right { right:0; }
+
+@keyframes slideBar {
+  0% { background-position: 0 0; }
+  50% { background-position: 0 100%; }
+  100% { background-position: 0 0; }
+}
+
+/* Sekcja nagłówka */
+.header {
+  height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;
+  position:relative;
+}
+
+/* Nagłówek Minecraft */
+.header h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size:100px;
+  color:#00f; /* niebieski */
+  text-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 20px #00f, 0 0 40px #00f;
+  opacity:0;
+  transform:scale(0.5) rotate(-5deg);
+  animation:headerAnim 2s forwards 0.5s;
+}
+@keyframes headerAnim {
+  0% { opacity:0; transform:scale(0.5) rotate(-5deg); }
+  50% { opacity:1; transform:scale(1.3) rotate(5deg); }
+  100% { opacity:1; transform:scale(1) rotate(0deg); }
+}
+
+/* Strzałka w dół */
+.scroll-down {
+  font-size:50px; color:#fff; cursor:pointer; margin-top:30px;
+  animation:arrowPulse 1.5s infinite, arrowBounce 2s infinite;
+}
+@keyframes arrowBounce {
+  0%,20%,50%,80%,100% { transform:translateY(0); }
+  40% { transform:translateY(-20px); }
+  60% { transform:translateY(-10px); }
+}
+@keyframes arrowPulse {
+  0%,100% { opacity:1; }
+  50% { opacity:0.5; }
+}
+
+/* Sekcja przycisków */
+.buttons {
+  height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; gap:30px;
+}
+
+/* Animowane przyciski */
+.button {
+  padding:20px 40px; border:2px solid white; border-radius:12px; text-decoration:none; color:#0f0;
+  font-size:22px;
+  background: rgba(0,0,0,0.05);
+  opacity:0;
+  transform: translateY(50px);
+  transition: all 0.3s;
+  animation:wave 3s ease-in-out infinite alternate;
+}
+.button.visible { 
+  opacity:1; 
+  transform: translateY(0); 
+}
+@keyframes wave {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-5px) translateX(5px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+.button:hover { 
+  background: rgba(0,255,0,0.3); 
+  box-shadow: 0 0 25px #0f0;
+  transform: scale(1.1); 
+}
+
+</style>
+</head>
+<body>
+
+<!-- Paski boczne -->
+<div class="side-bar-left"></div>
+<div class="side-bar-right"></div>
+
+<!-- Przycisk do sidebar -->
+<button id="toggleSidebar">☰ Info</button>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="events">
+    <h2>Eventy</h2>
+    <p>Co sobotę o 19:00</p>
+    <p>Co sobotę o 20:00</p>
+  </div>
+  <div class="creators">
+    <h2>Twórcy</h2>
+    <p>XxDenarekX</p>
+    <p>_AN0MALIA_</p>
+    <p>wikrekin</p>
+    <p>Mstruskawka</p>
+  </div>
+</div>
+
+<!-- Nagłówek -->
+<div class="header">
+  <h1>KOBYLE</h1>
+  <a href="#buttons" class="scroll-down">⌄</a>
+</div>
+
+<!-- Przyciski -->
+<div class="buttons" id="buttons">
+  <a class="button" href="https://discord.gg/TUTAJ_DAJ_ZAPROSZENIE" target="_blank">Dołącz do Discorda</a>
+  <a class="button" href="ip.html">IP serwera</a>
+  <a class="button" href="pomoc.html">Pomoc / Zgłoś problem</a>
+</div>
+
+<script>
+// Toggle sidebar
+const toggleBtn = document.getElementById('toggleSidebar');
+const sidebar = document.getElementById('sidebar');
+toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); });
+
+// Animacja przycisków przy scrollu
+const buttons = document.querySelectorAll('.button');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.5 });
+
+buttons.forEach((btn, i) => {
+  observer.observe(btn);
+  btn.style.transitionDelay = `${i * 0.3}s`;
+});
+</script>
+
+</body>
+</html>
